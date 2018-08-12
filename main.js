@@ -4,6 +4,5 @@ if ($app.env == $env.today ) {
 } else if ($app.env == $env.siri) {
     path = "scripts/siri"
 }
-// path = "scripts/siri"
 var module = require(path);
 module.init();

@@ -1,4 +1,5 @@
 var api = require("./api");
+var dataManager = require("./data");
 
 let basicLabelY = 58
 let basicLabelHght = 36
@@ -43,6 +44,22 @@ var carLabel = {
 var list = {
   type: "list",
   props: {
+    actions: [
+      {
+        title: "上班",
+        handler: function(sender, indexPath) {
+          let listData = direction ? siteData.lineResults1 : siteData.lineResults0
+          dataManager.saveGoWork(basic.data.line_id, basic.data.line_name, direction, listData.stops[indexPath.row].id)
+        }
+      },
+      {
+        title: "回家",
+        handler: function(sender, indexPath) {
+          let listData = direction ? siteData.lineResults1 : siteData.lineResults0
+          dataManager.saveBackHome(basic.data.line_id, basic.data.line_name, direction, listData.stops[indexPath.row].id)
+        }
+      },
+    ]
   },
   layout: function(make, view) {
     make.top.inset(tableViewY);
@@ -90,7 +107,7 @@ var searchButton = {
     tapped: function(sender) {
       $input.text({
         type: $kbType.search,
-        placeholder: "406 - 不要加路",
+        placeholder: "eg.406",
         handler: function(text) {
           api.fetchLineBasic(text ? text : "406", function(data) { 
             basic = data
@@ -117,32 +134,11 @@ function fetchCar(object, index) {
 }
 
 function reloadBasic() {
-  if (!basic.data) {
-    $("basicLabel").text = "没有查到该路公交信息"
-    return;
-  }
-  let stopSite = direction ? basic.data.start_stop : basic.data.end_stop
-  let startSite = direction ? basic.data.end_stop : basic.data.start_stop
-  let lineName = "公交路线: " + basic.data.line_name + "    "
-  let lineSite = startSite + "->" + stopSite + "\n"
-  let startTime = "首班车: " + basic.data.start_earlytime + "    "
-  let stopTime = "末班车: " + basic.data.end_latetime
-  $("basicLabel").text = lineName + lineSite + startTime + stopTime
-}
-
-function formatData(data) {
-  if (JSON.stringify(data) == "{}") {
-    return "尚未发车，请耐心等待！"
-  } 
-  let car = data.cars[0]
-  let m = Math.floor(car.time / 60)
-  let s = car.time % 60
-  return car.terminal + "\n还有" + car.stopdis + "站，约" + car.distance + "米\n需要" + m + "分" + s + "秒"
+  $("basicLabel").text = dataManager.formatBasic(basic, direction)
 }
 
 function reloadCar(object) {
-  console.log(car)
-  $("carLabel").text = object + ": " + formatData(car)
+  $("carLabel").text = object + ": " + dataManager.formatCar(car)
 }
 
 function reloadData() {
@@ -151,7 +147,6 @@ function reloadData() {
   for (var i=0; i < listData.stops.length; i++) {
     sites.push(listData.stops[i].id + ". " + listData.stops[i].zdmc)
   }
-  console.log(sites)
   $("list").data = sites
 }
 

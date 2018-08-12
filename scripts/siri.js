@@ -1,31 +1,22 @@
 var api = require("./api");
+var dataManager = require("./data");
 
 var backHomeData;
 var goWorkData
 
 function baHome() {
-  let url = "http://106.14.7.118:3389/bus/queryarrivalinfo?lineid=040600&linename=406%E8%B7%AF&direction=0&stopid=2"
-  $http.request({
-    method: "GET",
-    url: encodeURI(url),
-    handler: function(resp) {
-      console.log(resp.data)
-      backHomeData = resp.data.data
-      reload()
-    }
+  let carInfo = dataManager.backHomeData
+  api.fetchCar(carInfo.line_id, carInfo.line_name, carInfo.direction, carInfo.stopid, function(data) {
+    backHomeData = data.data
+    reload()
   })
 }
 
 function goWork() {
-  let url = "http://106.14.7.118:3389/bus/queryarrivalinfo?lineid=040600&linename=406%E8%B7%AF&direction=1&stopid=20"
-  $http.request({
-    method: "GET",
-    url: encodeURI(url),
-    handler: function(resp) {
-      console.log(resp.data)
-      goWorkData = resp.data.data
-      reload()
-    }
+  let carInfo = dataManager.goWorkData
+  api.fetchCar(carInfo.line_id, carInfo.line_name, carInfo.direction, carInfo.stopid, function(data) {
+    goWorkData = data.data
+    reload()
   })
 }
 
