@@ -5,7 +5,8 @@
     "version": "0.1",
     "author": "wxiubin",
     "website": "https://github.com/wxiubin",
-    "types": 0
+    "types": 0,
+    "http://118.89.160.44:3389"
   },
   "settings": {
     "minSDKVer": "1.0.0",

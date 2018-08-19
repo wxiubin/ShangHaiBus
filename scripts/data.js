@@ -54,11 +54,21 @@ function formatBasic(basic, direction) {
     return lineName + lineSite + startTime + stopTime
 }
 
+function saveHost(host) {
+    $cache.set("host", host)
+}
+
+function getHost() {
+    return $cache.get("host", host)
+}
+
 module.exports = {
     saveBackHome: saveBackHome,
     saveGoWork: saveGoWork,
     goWorkData: goWorkData,
     backHomeData: backHomeData,
     formatCar: formatCar,
-    formatBasic: formatBasic
+    formatBasic: formatBasic,
+    getHost: getHost,
+    saveHost: saveHost,
 }
